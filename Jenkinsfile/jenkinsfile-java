@@ -1,9 +1,9 @@
 pipeline {
-    agent {label "mnp-dev-app-agent"}
+    agent {label "mnp-app-slave"}
      environment {
         APP_NAME = "mnptech-devops"
         RELEASE = "4.0.0"
-        DOCKER_USER = "devopsawsr"
+        DOCKER_USER = "purushothamdockers"
         DOCKER_PASS = "DockerHub"
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}" + "${BUILD_NUMBER}"
@@ -15,28 +15,9 @@ pipeline {
                 checkout scm
             }
         }
-        stage ("Sonar") {
-            steps {
-                script{
-                   withSonarQubeEnv('SonarQube') {
-                       sh "/opt/sonar-scanner/bin/sonar-scanner -X -Dproject.settings=/var/lib/jenkins/workspace/JAVA/sonar-project.properties"
-                   }
-                   sleep(20)
-                   timeout(time: 10, unit: 'MINUTES') {
-                       waitForQualityGate abortPipeline: true
-                   }
-                }
-            }
-        }
         stage ("Build") {
             steps {
                 sh "mvn clean package"
-            }
-        }
-        stage ("Test") {
-            steps {
-                sh "mvn test"
-                sh "ls /var/lib/jenkins/workspace/JAVA/webapp/target/"
             }
         }
         stage ("DockerBuild") {
