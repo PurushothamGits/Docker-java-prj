@@ -1,7 +1,7 @@
 pipeline {
-    agent {label "mnp-app-slave"}
+    agent {label "docker"}
      environment {
-        APP_NAME = "mnptech-devops"
+        APP_NAME = "devops"
         RELEASE = "4.0.0"
         DOCKER_USER = "purushothamdockers"
         DOCKER_PASS = "DockerHub"
